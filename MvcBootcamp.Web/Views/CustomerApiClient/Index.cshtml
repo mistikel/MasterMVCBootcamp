@@ -58,11 +58,124 @@
                     $('<tr><td>' + data[i].CustomerID + '</td>' +
                         '<td>' + data[i].CompanyName + '</td></tr>').appendTo(tblbody);
                 }
+                divstat = $('$divstatus');
+                divstat.text = ("");
+
             },
             error: function (err){
                 alert(err);
             }
             });
         }
+
+        function SearchCustomers(id) {
+            $.ajax({
+                url: "http://localhost:1031//api/CustomersApi/" + id,
+                type: "Get",
+                succes: function (data) {
+                    var tbody = $('#tblbody');
+                    tblbody.empty();
+                    
+                        $('<tr><td>' + data.CustomerID + '</td>' +
+                            '<td>' + data.CompanyName + '</td></tr>').appendTo(tblbody);
+                    
+                    divstat = $('$divstatus');
+                    divstat.text = ("");
+
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        }
+
+        function InsertCustomers(customerdata) {
+            $.ajax({
+                url: "http://localhost:1031//api/CustomersApi",
+                type: "Post",
+                data: JSON.stringify(customerdata),
+                contenType : 'application/json;chartset=utf-8',
+                succes: function (data, status, xhr) {
+                    alert("Insert Succes");
+                    GetCustomers();
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        }
+
+        function DeleteCustomers(id) {
+            $.ajax({
+                url: "http://localhost:1031//api/CustomersApi/" + id,
+                type: "Post",
+                succes: function (data, status, xhr) {
+                    alert("Delete Succes");
+                    GetCustomers();
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        }
+
+        function UpdateCustomers(id,customerdata) {
+            $.ajax({
+                url: "http://localhost:1031//api/CustomersApi/" + id,
+                type: "Put",
+                data: JSON.stringify(customerdata),
+                contenType: 'application/json;chartset=utf-8',
+                succes: function (data, status, xhr) {
+                    alert("Update Succes");
+                    GetCustomers();
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var btnget = $('#btngetall');
+            var btnfind = $('#btnfind');
+            var btnupdate = $('#btnupdate');
+            var btndelete = $('#btndelete');
+            var divstat = $('#divstatus');
+
+            btnget.on('click', function () {
+                divstat.text = ("Loading ...");
+            });
+
+            btnfind.on('click', function () {
+                divstat.text = ("Searching ...");
+                var txtid = $('#txtid');
+                SearchCustomers(txtid.val());
+            });
+
+            btninsert.on('click', function () {
+                divstat.text = ("Inserting ...");
+                var newcust = {
+                    "CutomerID": $('#txtid').val(),
+                    "CompanyName": $('#txtname').val()
+                };
+                InsertCustomers(newcust);
+            });
+
+            btnupdate.on('click', function () {
+                divstat.text = ("Updating ...");
+                var custToUpdate = {
+                    "CutomerID": $('#txtid').val(),
+                    "CompanyName": $('#txtname').val()
+                };
+                UpdateCustomers($('#txtid').val(),custToUpdate);
+            });
+
+            btndelete.on('click', function () {
+                divstat.text = ("Deleting ...");
+                var txtid = $('#txtid');
+                DeleteCustomers(txtid.val());
+            });
+
+        });
     </script>
 }
