@@ -35,8 +35,8 @@
     <table id="tblcustomer" class="table table-striped">
         <thead>
             <tr>
-                <td>Cusomter ID</td>
-                <td>Company Name</td>
+                <th>Cusomter ID</th>
+                <th>Company Name</th>
             </tr>
         </thead>
         <tbody id="tblbody">
@@ -49,88 +49,86 @@
     <script type="text/javascript">
         function GetCustomers() {
             $.ajax({
-                url:"http://localhost:1031//api/CustomersApi",
-            type:"Get",
-            succes: function (data){
-                var tbody = $('#tblbody');
-                tblbody.empty();
+                url:"http://localhost:1031/api/CustomersApi",
+            type:"Get", 
+            success: function (data) {
+                var tbody = $("#tblbody");
+                tbody.empty();
                 for (var i = 0; i < data.length; i++) {
-                    $('<tr><td>' + data[i].CustomerID + '</td>' +
-                        '<td>' + data[i].CompanyName + '</td></tr>').appendTo(tblbody);
+                    $("<tr><td>" + data[i].CustomerID + "</td><td>" + data[i].CompanyName + "</td></tr>").appendTo(tbody);
                 }
-                divstat = $('$divstatus');
+                divstat = $("#divstatus");
                 divstat.text = ("");
-
             },
             error: function (err){
-                alert(err);
+                alert(err.responseText);
             }
             });
         }
 
         function SearchCustomers(id) {
             $.ajax({
-                url: "http://localhost:1031//api/CustomersApi/" + id,
+                url: "http://localhost:1031/api/CustomersApi/" + id,
                 type: "Get",
-                succes: function (data) {
+                success: function (data) {
                     var tbody = $('#tblbody');
-                    tblbody.empty();
+                    tbody.empty();
                     
                         $('<tr><td>' + data.CustomerID + '</td>' +
-                            '<td>' + data.CompanyName + '</td></tr>').appendTo(tblbody);
+                            '<td>' + data.CompanyName + '</td></tr>').appendTo(tbody);
                     
                     divstat = $('$divstatus');
                     divstat.text = ("");
 
                 },
                 error: function (err) {
-                    alert(err);
+                    alert(err.responseText);
                 }
             });
         }
 
         function InsertCustomers(customerdata) {
             $.ajax({
-                url: "http://localhost:1031//api/CustomersApi",
+                url: "http://localhost:1031/api/CustomersApi",
                 type: "Post",
                 data: JSON.stringify(customerdata),
                 contenType : 'application/json;chartset=utf-8',
-                succes: function (data, status, xhr) {
+                success: function (data, status, xhr) {
                     alert("Insert Succes");
                     GetCustomers();
                 },
                 error: function (err) {
-                    alert(err);
+                    alert(err.responseText);
                 }
             });
         }
 
         function DeleteCustomers(id) {
             $.ajax({
-                url: "http://localhost:1031//api/CustomersApi/" + id,
+                url: "http://localhost:1031/api/CustomersApi/" + id,
                 type: "Post",
-                succes: function (data, status, xhr) {
+                success: function (data, status, xhr) {
                     alert("Delete Succes");
                     GetCustomers();
                 },
                 error: function (err) {
-                    alert(err);
+                    alert(err.responseText);
                 }
             });
         }
 
         function UpdateCustomers(id,customerdata) {
             $.ajax({
-                url: "http://localhost:1031//api/CustomersApi/" + id,
+                url: "http://localhost:1031/api/CustomersApi/" + id,
                 type: "Put",
                 data: JSON.stringify(customerdata),
                 contenType: 'application/json;chartset=utf-8',
-                succes: function (data, status, xhr) {
+                success: function (data, status, xhr) {
                     alert("Update Succes");
                     GetCustomers();
                 },
                 error: function (err) {
-                    alert(err);
+                    alert(err.responseText);
                 }
             });
         }
@@ -140,19 +138,21 @@
             var btnfind = $('#btnfind');
             var btnupdate = $('#btnupdate');
             var btndelete = $('#btndelete');
+            var btninsert = $('#btninsert');
             var divstat = $('#divstatus');
 
-            btnget.on('click', function () {
+            btnget.click( function () {
                 divstat.text = ("Loading ...");
+                GetCustomers();
             });
 
-            btnfind.on('click', function () {
+            btnfind.click( function () {
                 divstat.text = ("Searching ...");
                 var txtid = $('#txtid');
                 SearchCustomers(txtid.val());
             });
 
-            btninsert.on('click', function () {
+            btninsert.click( function () {
                 divstat.text = ("Inserting ...");
                 var newcust = {
                     "CutomerID": $('#txtid').val(),
@@ -161,7 +161,7 @@
                 InsertCustomers(newcust);
             });
 
-            btnupdate.on('click', function () {
+            btnupdate.click( function () {
                 divstat.text = ("Updating ...");
                 var custToUpdate = {
                     "CutomerID": $('#txtid').val(),
@@ -170,7 +170,7 @@
                 UpdateCustomers($('#txtid').val(),custToUpdate);
             });
 
-            btndelete.on('click', function () {
+            btndelete.click(function () {
                 divstat.text = ("Deleting ...");
                 var txtid = $('#txtid');
                 DeleteCustomers(txtid.val());
