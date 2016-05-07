@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Customer Client Web API";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <input type="button" value="Get All Customers" id="btngetall" />
+    <input type="button" value="Find Customer" id="btnfind" />
+    <input type="button" value="Update Customers" id="btnupdate" />
+    <input type="button" value="Delete Customers" id="btndelete" />
+
+    <hr />
+    <table>
+        <tr>
+            <td>Customer ID</td>
+            <td><input type="text" id="txtid"/></td>
+        </tr>
+        <tr>
+            <td>Company Name</td>
+            <td><input type="text" id="txtname" /></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="button" value="Insert" id="btninsert"/></td>
+        </tr>
+    </table>
+</div>
+
+<div id="divstatus">
+
+</div>
+
+<div>
+    <table id="tblcustomer" class="table table-striped">
+        <thead>
+            <tr>
+                <td>Cusomter ID</td>
+                <td>Company Name</td>
+            </tr>
+        </thead>
+        <tbody id="tblbody">
+        </tbody>
+    </table>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        function GetCustomers() {
+            $.ajax({
+                url:"http://localhost:1031//api/CustomersApi",
+            type:"Get",
+            succes: function (data){
+                var tbody = $('#tblbody');
+                tblbody.empty();
+                for (var i = 0; i < data.length; i++) {
+                    $('<tr><td>' + data[i].CustomerID + '</td>' +
+                        '<td>' + data[i].CompanyName + '</td></tr>').appendTo(tblbody);
+                }
+            },
+            error: function (err){
+                alert(err);
+            }
+            });
+        }
+    </script>
+}
